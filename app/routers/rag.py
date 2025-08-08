@@ -43,11 +43,37 @@ async def get_rag_test_cases(
     ).offset(skip).limit(limit).all()
     return test_cases
 
-@router.post("/run-test/")
+@router.post("/test-cases/{test_case_id}/run")
 async def run_rag_test(
+    test_case_id: int,
+    request_data: dict,
+    db: Session = Depends(get_db)
+):
+    """运行RAG任务测试"""
+    model_name = request_data.get("model_name")
+    embedding_model = request_data.get("embedding_model", "mock-embedding")
+    retrieval_strategy = request_data.get("retrieval_strategy", "similarity")
+    
+    if not model_name:
+        raise HTTPException(status_code=400, detail="缺少model_name参数")
+        
+    return await _run_rag_test_internal(test_case_id, model_name, embedding_model, retrieval_strategy, db)
+
+@router.post("/run-test/")
+async def run_rag_test_form(
     test_case_id: int,
     model_name: str,
     db: Session = Depends(get_db)
+):
+    """运行RAG任务测试（表单方式）"""
+    return await _run_rag_test_internal(test_case_id, model_name, "mock-embedding", "similarity", db)
+
+async def _run_rag_test_internal(
+    test_case_id: int,
+    model_name: str,
+    embedding_model: str,
+    retrieval_strategy: str,
+    db: Session
 ):
     """运行RAG任务测试"""
     test_case = db.query(TestCase).filter(TestCase.id == test_case_id).first()
@@ -61,7 +87,13 @@ async def run_rag_test(
         start_time = time.time()
         
         rag_service = RAGService()
-        input_data = RAGInput(**test_case.input_data)
+        
+        # 适配我们的数据结构
+        input_data = RAGInput(
+            query=test_case.input_data.get("query"),
+            documents=test_case.input_data.get("knowledge_base"),
+            top_k=test_case.input_data.get("top_k", 5)
+        )
         
         result = await rag_service.generate_answer(
             query=input_data.query,
@@ -72,7 +104,12 @@ async def run_rag_test(
         
         execution_time = time.time() - start_time
         
-        expected_output = RAGOutput(**test_case.expected_output)
+        # 适配expected_output结构
+        expected_output = RAGOutput(
+            answer="",  # 这里不需要具体的答案文本
+            retrieved_documents=[],  # 空的检索文档列表
+            confidence=test_case.expected_output.get("min_relevance", 0.7)
+        )
         metrics = rag_service.evaluate(result, expected_output)
         
         test_result = TestResult(

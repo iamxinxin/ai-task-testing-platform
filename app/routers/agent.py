@@ -43,11 +43,39 @@ async def get_agent_test_cases(
     ).offset(skip).limit(limit).all()
     return test_cases
 
-@router.post("/run-test/")
+@router.post("/test-cases/{test_case_id}/run")
 async def run_agent_test(
+    test_case_id: int,
+    request_data: dict,
+    db: Session = Depends(get_db)
+):
+    """运行Agent任务测试"""
+    model_name = request_data.get("model_name")
+    execution_mode = request_data.get("execution_mode", "autonomous")
+    timeout = request_data.get("timeout", 300)
+    verbose_logging = request_data.get("verbose_logging", False)
+    
+    if not model_name:
+        raise HTTPException(status_code=400, detail="缺少model_name参数")
+        
+    return await _run_agent_test_internal(test_case_id, model_name, execution_mode, timeout, verbose_logging, db)
+
+@router.post("/run-test/")
+async def run_agent_test_form(
     test_case_id: int = Form(...),
     model_name: str = Form(...),
     db: Session = Depends(get_db)
+):
+    """运行Agent任务测试（表单方式）"""
+    return await _run_agent_test_internal(test_case_id, model_name, "autonomous", 300, False, db)
+
+async def _run_agent_test_internal(
+    test_case_id: int,
+    model_name: str,
+    execution_mode: str,
+    timeout: int,
+    verbose_logging: bool,
+    db: Session
 ):
     """运行Agent任务测试"""
     test_case = db.query(TestCase).filter(TestCase.id == test_case_id).first()
@@ -61,7 +89,13 @@ async def run_agent_test(
         start_time = time.time()
         
         agent_service = AgentService()
-        input_data = AgentInput(**test_case.input_data)
+        
+        # 适配我们的数据结构
+        input_data = AgentInput(
+            task=test_case.input_data.get("task_goal"),
+            context={"initial_state": test_case.input_data.get("initial_state")},
+            tools=[tool.get("name") for tool in test_case.input_data.get("available_tools", [])]
+        )
         
         result = await agent_service.execute_task(
             task=input_data.task,
@@ -72,7 +106,12 @@ async def run_agent_test(
         
         execution_time = time.time() - start_time
         
-        expected_output = AgentOutput(**test_case.expected_output)
+        # 适配expected_output结构
+        expected_output = AgentOutput(
+            result=test_case.expected_output.get("expected_result", ""),
+            actions_taken=[],  # 空的动作列表
+            confidence=0.8  # 默认置信度
+        )
         metrics = agent_service.evaluate(result, expected_output)
         
         test_result = TestResult(
