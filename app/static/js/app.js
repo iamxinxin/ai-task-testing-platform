@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
 // 初始化应用
 function initializeApp() {
     loadDashboardData();
-    loadClassificationTestCases();
+    loadAllTestCases();
     setupEventListeners();
 }
 
@@ -18,9 +18,23 @@ function initializeApp() {
 function setupEventListeners() {
     // 分类任务表单提交
     document.getElementById('classification-form').addEventListener('submit', handleClassificationFormSubmit);
-    
-    // 运行分类测试表单提交
     document.getElementById('run-classification-test').addEventListener('submit', handleRunClassificationTest);
+    
+    // 纠错任务表单提交
+    document.getElementById('correction-form').addEventListener('submit', handleCorrectionFormSubmit);
+    document.getElementById('run-correction-test').addEventListener('submit', handleRunCorrectionTest);
+    
+    // 对话任务表单提交
+    document.getElementById('dialogue-form').addEventListener('submit', handleDialogueFormSubmit);
+    document.getElementById('run-dialogue-test').addEventListener('submit', handleRunDialogueTest);
+    
+    // RAG任务表单提交
+    document.getElementById('rag-form').addEventListener('submit', handleRagFormSubmit);
+    document.getElementById('run-rag-test').addEventListener('submit', handleRunRagTest);
+    
+    // Agent任务表单提交
+    document.getElementById('agent-form').addEventListener('submit', handleAgentFormSubmit);
+    document.getElementById('run-agent-test').addEventListener('submit', handleRunAgentTest);
 }
 
 // 显示指定部分
@@ -235,24 +249,45 @@ function formatDateTime(dateString) {
 }
 
 // 加载分类测试用例
-async function loadClassificationTestCases() {
+// 加载所有任务类型的测试用例
+async function loadAllTestCases() {
+    await loadTestCasesForTaskType('classification');
+    await loadTestCasesForTaskType('correction');
+    await loadTestCasesForTaskType('dialogue');
+    await loadTestCasesForTaskType('rag');
+    await loadTestCasesForTaskType('agent');
+}
+
+// 加载指定任务类型的测试用例
+async function loadTestCasesForTaskType(taskType) {
     try {
-        const response = await fetch('/api/classification/test-cases/');
+        const response = await fetch(`/api/${taskType}/test-cases/`);
         const data = await response.json();
         
-        const select = document.querySelector('select[name="test_case_id"]');
-        select.innerHTML = '<option value="">请选择测试用例</option>';
-        
-        data.forEach(testCase => {
-            const option = document.createElement('option');
-            option.value = testCase.id;
-            option.textContent = testCase.name;
-            select.appendChild(option);
-        });
+        // 找到对应任务类型的选择框
+        const section = document.getElementById(`${taskType}-section`);
+        if (section) {
+            const select = section.querySelector('select[name="test_case_id"]');
+            if (select) {
+                select.innerHTML = '<option value="">请选择测试用例</option>';
+                
+                data.forEach(testCase => {
+                    const option = document.createElement('option');
+                    option.value = testCase.id;
+                    option.textContent = testCase.name;
+                    select.appendChild(option);
+                });
+            }
+        }
         
     } catch (error) {
-        console.error('加载分类测试用例失败:', error);
+        console.error(`加载${taskType}测试用例失败:`, error);
     }
+}
+
+// 保持向后兼容
+async function loadClassificationTestCases() {
+    await loadTestCasesForTaskType('classification');
 }
 
 // 处理分类表单提交
@@ -402,6 +437,419 @@ async function apiRequest(url, options = {}) {
         throw error;
     }
 }
+
+// ==================== 纠错任务处理函数 ====================
+
+// 处理纠错表单提交
+async function handleCorrectionFormSubmit(event) {
+    event.preventDefault();
+    
+    const formData = new FormData(event.target);
+    
+    const testCaseData = {
+        name: formData.get('name'),
+        description: formData.get('description'),
+        task_type: 'correction',
+        input_data: {
+            original_text: formData.get('original_text'),
+            error_type: formData.get('error_type')
+        },
+        expected_output: {
+            corrected_text: formData.get('expected_corrected'),
+            min_similarity: parseFloat(formData.get('min_similarity'))
+        }
+    };
+    
+    try {
+        showLoading();
+        const response = await fetch('/api/correction/test-cases/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(testCaseData)
+        });
+        
+        if (response.ok) {
+            showAlert('纠错测试用例创建成功！', 'success');
+            event.target.reset();
+            await loadTestCasesForTaskType('correction');
+        } else {
+            const error = await response.json();
+            showAlert('创建失败: ' + (error.detail || '未知错误'), 'error');
+        }
+    } catch (error) {
+        console.error('创建纠错测试用例失败:', error);
+        showAlert('创建失败: ' + error.message, 'error');
+    } finally {
+        hideLoading();
+    }
+}
+
+// 运行纠错测试
+async function handleRunCorrectionTest(event) {
+    event.preventDefault();
+    
+    const formData = new FormData(event.target);
+    const testCaseId = formData.get('test_case_id');
+    const modelName = formData.get('model_name');
+    const correctionMode = formData.get('correction_mode');
+    
+    if (!testCaseId || !modelName) {
+        showAlert('请选择测试用例和模型', 'error');
+        return;
+    }
+    
+    try {
+        showLoading();
+        const response = await fetch(`/api/correction/test-cases/${testCaseId}/run`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                model_name: modelName,
+                correction_mode: correctionMode
+            })
+        });
+        
+        if (response.ok) {
+            const result = await response.json();
+            displayTestResult('correction', result);
+            loadDashboardData(); // 刷新仪表板数据
+        } else {
+            const error = await response.json();
+            showAlert('测试运行失败: ' + (error.detail || '未知错误'), 'error');
+        }
+    } catch (error) {
+        console.error('运行纠错测试失败:', error);
+        showAlert('测试运行失败: ' + error.message, 'error');
+    } finally {
+        hideLoading();
+    }
+}
+
+// ==================== 对话任务处理函数 ====================
+
+// 处理对话表单提交
+async function handleDialogueFormSubmit(event) {
+    event.preventDefault();
+    
+    const formData = new FormData(event.target);
+    let conversationHistory;
+    
+    try {
+        conversationHistory = JSON.parse(formData.get('conversation_history'));
+    } catch (error) {
+        showAlert('对话历史JSON格式错误', 'error');
+        return;
+    }
+    
+    const testCaseData = {
+        name: formData.get('name'),
+        description: formData.get('description'),
+        task_type: 'dialogue',
+        input_data: {
+            conversation_history: conversationHistory,
+            user_input: formData.get('user_input'),
+            dialogue_type: formData.get('dialogue_type')
+        },
+        expected_output: {
+            expected_keywords: formData.get('expected_keywords') ? formData.get('expected_keywords').split(',').map(s => s.trim()) : [],
+            min_response_length: parseInt(formData.get('min_response_length'))
+        }
+    };
+    
+    try {
+        showLoading();
+        const response = await fetch('/api/dialogue/test-cases/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(testCaseData)
+        });
+        
+        if (response.ok) {
+            showAlert('对话测试用例创建成功！', 'success');
+            event.target.reset();
+            await loadTestCasesForTaskType('dialogue');
+        } else {
+            const error = await response.json();
+            showAlert('创建失败: ' + (error.detail || '未知错误'), 'error');
+        }
+    } catch (error) {
+        console.error('创建对话测试用例失败:', error);
+        showAlert('创建失败: ' + error.message, 'error');
+    } finally {
+        hideLoading();
+    }
+}
+
+// 运行对话测试
+async function handleRunDialogueTest(event) {
+    event.preventDefault();
+    
+    const formData = new FormData(event.target);
+    const testCaseId = formData.get('test_case_id');
+    const modelName = formData.get('model_name');
+    const temperature = parseFloat(formData.get('temperature'));
+    const maxTokens = parseInt(formData.get('max_tokens'));
+    
+    if (!testCaseId || !modelName) {
+        showAlert('请选择测试用例和模型', 'error');
+        return;
+    }
+    
+    try {
+        showLoading();
+        const response = await fetch(`/api/dialogue/test-cases/${testCaseId}/run`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                model_name: modelName,
+                temperature: temperature,
+                max_tokens: maxTokens
+            })
+        });
+        
+        if (response.ok) {
+            const result = await response.json();
+            displayTestResult('dialogue', result);
+            loadDashboardData(); // 刷新仪表板数据
+        } else {
+            const error = await response.json();
+            showAlert('测试运行失败: ' + (error.detail || '未知错误'), 'error');
+        }
+    } catch (error) {
+        console.error('运行对话测试失败:', error);
+        showAlert('测试运行失败: ' + error.message, 'error');
+    } finally {
+        hideLoading();
+    }
+}
+
+// ==================== RAG任务处理函数 ====================
+
+// 处理RAG表单提交
+async function handleRagFormSubmit(event) {
+    event.preventDefault();
+    
+    const formData = new FormData(event.target);
+    const knowledgeBase = formData.get('knowledge_base').split('\n').filter(doc => doc.trim());
+    
+    const testCaseData = {
+        name: formData.get('name'),
+        description: formData.get('description'),
+        task_type: 'rag',
+        input_data: {
+            knowledge_base: knowledgeBase,
+            query: formData.get('query'),
+            rag_type: formData.get('rag_type'),
+            top_k: parseInt(formData.get('top_k'))
+        },
+        expected_output: {
+            expected_keywords: formData.get('expected_keywords') ? formData.get('expected_keywords').split(',').map(s => s.trim()) : [],
+            min_relevance: parseFloat(formData.get('min_relevance'))
+        }
+    };
+    
+    try {
+        showLoading();
+        const response = await fetch('/api/rag/test-cases/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(testCaseData)
+        });
+        
+        if (response.ok) {
+            showAlert('RAG测试用例创建成功！', 'success');
+            event.target.reset();
+            await loadTestCasesForTaskType('rag');
+        } else {
+            const error = await response.json();
+            showAlert('创建失败: ' + (error.detail || '未知错误'), 'error');
+        }
+    } catch (error) {
+        console.error('创建RAG测试用例失败:', error);
+        showAlert('创建失败: ' + error.message, 'error');
+    } finally {
+        hideLoading();
+    }
+}
+
+// 运行RAG测试
+async function handleRunRagTest(event) {
+    event.preventDefault();
+    
+    const formData = new FormData(event.target);
+    const testCaseId = formData.get('test_case_id');
+    const modelName = formData.get('model_name');
+    const embeddingModel = formData.get('embedding_model');
+    const retrievalStrategy = formData.get('retrieval_strategy');
+    
+    if (!testCaseId || !modelName) {
+        showAlert('请选择测试用例和模型', 'error');
+        return;
+    }
+    
+    try {
+        showLoading();
+        const response = await fetch(`/api/rag/test-cases/${testCaseId}/run`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                model_name: modelName,
+                embedding_model: embeddingModel,
+                retrieval_strategy: retrievalStrategy
+            })
+        });
+        
+        if (response.ok) {
+            const result = await response.json();
+            displayTestResult('rag', result);
+            loadDashboardData(); // 刷新仪表板数据
+        } else {
+            const error = await response.json();
+            showAlert('测试运行失败: ' + (error.detail || '未知错误'), 'error');
+        }
+    } catch (error) {
+        console.error('运行RAG测试失败:', error);
+        showAlert('测试运行失败: ' + error.message, 'error');
+    } finally {
+        hideLoading();
+    }
+}
+
+// ==================== Agent任务处理函数 ====================
+
+// 处理Agent表单提交
+async function handleAgentFormSubmit(event) {
+    event.preventDefault();
+    
+    const formData = new FormData(event.target);
+    let availableTools;
+    
+    try {
+        availableTools = JSON.parse(formData.get('available_tools'));
+    } catch (error) {
+        showAlert('可用工具JSON格式错误', 'error');
+        return;
+    }
+    
+    const testCaseData = {
+        name: formData.get('name'),
+        description: formData.get('description'),
+        task_type: 'agent',
+        input_data: {
+            task_goal: formData.get('task_goal'),
+            available_tools: availableTools,
+            initial_state: formData.get('initial_state'),
+            agent_type: formData.get('agent_type'),
+            max_steps: parseInt(formData.get('max_steps'))
+        },
+        expected_output: {
+            expected_result: formData.get('expected_result'),
+            success_criteria: formData.get('success_criteria') ? formData.get('success_criteria').split(',').map(s => s.trim()) : []
+        }
+    };
+    
+    try {
+        showLoading();
+        const response = await fetch('/api/agent/test-cases/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(testCaseData)
+        });
+        
+        if (response.ok) {
+            showAlert('Agent测试用例创建成功！', 'success');
+            event.target.reset();
+            await loadTestCasesForTaskType('agent');
+        } else {
+            const error = await response.json();
+            showAlert('创建失败: ' + (error.detail || '未知错误'), 'error');
+        }
+    } catch (error) {
+        console.error('创建Agent测试用例失败:', error);
+        showAlert('创建失败: ' + error.message, 'error');
+    } finally {
+        hideLoading();
+    }
+}
+
+// 运行Agent测试
+async function handleRunAgentTest(event) {
+    event.preventDefault();
+    
+    const formData = new FormData(event.target);
+    const testCaseId = formData.get('test_case_id');
+    const modelName = formData.get('model_name');
+    const executionMode = formData.get('execution_mode');
+    const timeout = parseInt(formData.get('timeout'));
+    const verboseLogging = formData.get('verbose_logging') === 'on';
+    
+    if (!testCaseId || !modelName) {
+        showAlert('请选择测试用例和模型', 'error');
+        return;
+    }
+    
+    try {
+        showLoading();
+        const response = await fetch(`/api/agent/test-cases/${testCaseId}/run`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                model_name: modelName,
+                execution_mode: executionMode,
+                timeout: timeout,
+                verbose_logging: verboseLogging
+            })
+        });
+        
+        if (response.ok) {
+            const result = await response.json();
+            displayTestResult('agent', result);
+            loadDashboardData(); // 刷新仪表板数据
+        } else {
+            const error = await response.json();
+            showAlert('测试运行失败: ' + (error.detail || '未知错误'), 'error');
+        }
+    } catch (error) {
+        console.error('运行Agent测试失败:', error);
+        showAlert('测试运行失败: ' + error.message, 'error');
+    } finally {
+        hideLoading();
+    }
+}
+
+// ==================== 通用测试结果显示函数 ====================
+
+// 显示测试结果
+function displayTestResult(taskType, result) {
+    const resultDiv = document.getElementById(`${taskType}-result`);
+    const contentDiv = document.getElementById(`${taskType}-result-content`);
+    
+    if (resultDiv && contentDiv) {
+        contentDiv.textContent = JSON.stringify(result, null, 2);
+        resultDiv.style.display = 'block';
+        
+        // 滚动到结果区域
+        resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+}
+
+// ==================== 工具函数 ====================
 
 // 工具函数
 function debounce(func, wait) {

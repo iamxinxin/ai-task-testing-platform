@@ -1,435 +1,57 @@
 INFO:     Will watch for changes in these directories: ['/workspace/project']
 INFO:     Uvicorn running on http://0.0.0.0:12000 (Press CTRL+C to quit)
-INFO:     Started reloader process [3286] using StatReload
+INFO:     Started reloader process [10929] using StatReload
 🚀 启动AI任务自动化测试平台
 📍 地址: http://0.0.0.0:12000
 🔧 调试模式: 开启
-INFO:     Started server process [3291]
+INFO:     Started server process [10933]
 INFO:     Waiting for application startup.
 INFO:     Application startup complete.
-INFO:     127.0.0.1:59804 - "GET /health HTTP/1.1" 200 OK
-INFO:     127.0.0.1:59808 - "GET /api/dashboard/overview HTTP/1.1" 200 OK
-INFO:     127.0.0.1:53684 - "GET /api/classification/test-cases/ HTTP/1.1" 200 OK
-INFO:     127.0.0.1:53690 - "POST /api/classification/run-test/ HTTP/1.1" 422 Unprocessable Entity
-WARNING:  StatReload detected changes in 'app/routers/classification.py'. Reloading...
-INFO:     Shutting down
-INFO:     Waiting for application shutdown.
-INFO:     Application shutdown complete.
-INFO:     Finished server process [3291]
-Process SpawnProcess-2:
-Traceback (most recent call last):
-  File "/openhands/micromamba/envs/openhands/lib/python3.12/multiprocessing/process.py", line 314, in _bootstrap
-    self.run()
-  File "/openhands/micromamba/envs/openhands/lib/python3.12/multiprocessing/process.py", line 108, in run
-    self._target(*self._args, **self._kwargs)
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/uvicorn/_subprocess.py", line 80, in subprocess_started
-    target(sockets=sockets)
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/uvicorn/server.py", line 67, in run
-    return asyncio.run(self.serve(sockets=sockets))
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/openhands/micromamba/envs/openhands/lib/python3.12/asyncio/runners.py", line 195, in run
-    return runner.run(main)
-           ^^^^^^^^^^^^^^^^
-  File "/openhands/micromamba/envs/openhands/lib/python3.12/asyncio/runners.py", line 118, in run
-    return self._loop.run_until_complete(task)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/openhands/micromamba/envs/openhands/lib/python3.12/asyncio/base_events.py", line 691, in run_until_complete
-    return future.result()
-           ^^^^^^^^^^^^^^^
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/uvicorn/server.py", line 71, in serve
-    await self._serve(sockets)
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/uvicorn/server.py", line 78, in _serve
-    config.load()
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/uvicorn/config.py", line 436, in load
-    self.loaded_app = import_from_string(self.app)
-                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/uvicorn/importer.py", line 19, in import_from_string
-    module = importlib.import_module(module_str)
-             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/openhands/micromamba/envs/openhands/lib/python3.12/importlib/__init__.py", line 90, in import_module
-    return _bootstrap._gcd_import(name[level:], package, level)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
-  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
-  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
-  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
-  File "<frozen importlib._bootstrap_external>", line 999, in exec_module
-  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
-  File "/workspace/project/app/main.py", line 10, in <module>
-    from app.routers import classification, correction, dialogue, rag, agent, dashboard
-  File "/workspace/project/app/routers/classification.py", line 53, in <module>
-    test_case_id: int = Form(...),
-                        ^^^^
-NameError: name 'Form' is not defined
-WARNING:  StatReload detected changes in 'app/routers/classification.py'. Reloading...
-INFO:     Started server process [3711]
-INFO:     Waiting for application startup.
-INFO:     Application startup complete.
-INFO:     127.0.0.1:44344 - "POST /api/classification/run-test/ HTTP/1.1" 200 OK
-INFO:     127.0.0.1:59530 - "POST /api/classification/batch-test/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54394 - "POST /api/correction/test-cases/ HTTP/1.1" 422 Unprocessable Entity
+INFO:     127.0.0.1:34492 - "POST /api/correction/test-cases/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34502 - "POST /api/dialogue/test-cases/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60372 - "POST /api/rag/test-cases/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48474 - "POST /api/agent/test-cases/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48480 - "POST /api/correction/test-cases/12/run HTTP/1.1" 404 Not Found
 WARNING:  StatReload detected changes in 'app/routers/correction.py'. Reloading...
 INFO:     Shutting down
 INFO:     Waiting for application shutdown.
 INFO:     Application shutdown complete.
-INFO:     Finished server process [3711]
-Process SpawnProcess-4:
-Traceback (most recent call last):
-  File "/openhands/micromamba/envs/openhands/lib/python3.12/multiprocessing/process.py", line 314, in _bootstrap
-    self.run()
-  File "/openhands/micromamba/envs/openhands/lib/python3.12/multiprocessing/process.py", line 108, in run
-    self._target(*self._args, **self._kwargs)
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/uvicorn/_subprocess.py", line 80, in subprocess_started
-    target(sockets=sockets)
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/uvicorn/server.py", line 67, in run
-    return asyncio.run(self.serve(sockets=sockets))
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/openhands/micromamba/envs/openhands/lib/python3.12/asyncio/runners.py", line 195, in run
-    return runner.run(main)
-           ^^^^^^^^^^^^^^^^
-  File "/openhands/micromamba/envs/openhands/lib/python3.12/asyncio/runners.py", line 118, in run
-    return self._loop.run_until_complete(task)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/openhands/micromamba/envs/openhands/lib/python3.12/asyncio/base_events.py", line 691, in run_until_complete
-    return future.result()
-           ^^^^^^^^^^^^^^^
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/uvicorn/server.py", line 71, in serve
-    await self._serve(sockets)
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/uvicorn/server.py", line 78, in _serve
-    config.load()
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/uvicorn/config.py", line 436, in load
-    self.loaded_app = import_from_string(self.app)
-                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/uvicorn/importer.py", line 19, in import_from_string
-    module = importlib.import_module(module_str)
-             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/openhands/micromamba/envs/openhands/lib/python3.12/importlib/__init__.py", line 90, in import_module
-    return _bootstrap._gcd_import(name[level:], package, level)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
-  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
-  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
-  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
-  File "<frozen importlib._bootstrap_external>", line 999, in exec_module
-  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
-  File "/workspace/project/app/main.py", line 10, in <module>
-    from app.routers import classification, correction, dialogue, rag, agent, dashboard
-  File "/workspace/project/app/routers/correction.py", line 48, in <module>
-    test_case_id: int = Form(...),
-                        ^^^^
-NameError: name 'Form' is not defined
+INFO:     Finished server process [10933]
+INFO:     Started server process [12385]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
 WARNING:  StatReload detected changes in 'app/routers/correction.py'. Reloading...
-INFO:     Started server process [3984]
-INFO:     Waiting for application startup.
-INFO:     Application startup complete.
-INFO:     127.0.0.1:52836 - "POST /api/correction/run-test/ HTTP/1.1" 200 OK
-WARNING:  StatReload detected changes in 'app/routers/agent.py'. Reloading...
 INFO:     Shutting down
 INFO:     Waiting for application shutdown.
 INFO:     Application shutdown complete.
-INFO:     Finished server process [3984]
-Process SpawnProcess-6:
-Traceback (most recent call last):
-  File "/openhands/micromamba/envs/openhands/lib/python3.12/multiprocessing/process.py", line 314, in _bootstrap
-    self.run()
-  File "/openhands/micromamba/envs/openhands/lib/python3.12/multiprocessing/process.py", line 108, in run
-    self._target(*self._args, **self._kwargs)
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/uvicorn/_subprocess.py", line 80, in subprocess_started
-    target(sockets=sockets)
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/uvicorn/server.py", line 67, in run
-    return asyncio.run(self.serve(sockets=sockets))
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/openhands/micromamba/envs/openhands/lib/python3.12/asyncio/runners.py", line 195, in run
-    return runner.run(main)
-           ^^^^^^^^^^^^^^^^
-  File "/openhands/micromamba/envs/openhands/lib/python3.12/asyncio/runners.py", line 118, in run
-    return self._loop.run_until_complete(task)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/openhands/micromamba/envs/openhands/lib/python3.12/asyncio/base_events.py", line 691, in run_until_complete
-    return future.result()
-           ^^^^^^^^^^^^^^^
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/uvicorn/server.py", line 71, in serve
-    await self._serve(sockets)
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/uvicorn/server.py", line 78, in _serve
-    config.load()
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/uvicorn/config.py", line 436, in load
-    self.loaded_app = import_from_string(self.app)
-                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/uvicorn/importer.py", line 19, in import_from_string
-    module = importlib.import_module(module_str)
-             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/openhands/micromamba/envs/openhands/lib/python3.12/importlib/__init__.py", line 90, in import_module
-    return _bootstrap._gcd_import(name[level:], package, level)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
-  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
-  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
-  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
-  File "<frozen importlib._bootstrap_external>", line 999, in exec_module
-  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
-  File "/workspace/project/app/main.py", line 10, in <module>
-    from app.routers import classification, correction, dialogue, rag, agent, dashboard
-  File "/workspace/project/app/routers/agent.py", line 48, in <module>
-    test_case_id: int = Form(...),
-                        ^^^^
-NameError: name 'Form' is not defined
-WARNING:  StatReload detected changes in 'app/routers/agent.py'. Reloading...
-INFO:     Started server process [4185]
+INFO:     Finished server process [12385]
+INFO:     Started server process [12636]
 INFO:     Waiting for application startup.
 INFO:     Application startup complete.
-INFO:     127.0.0.1:34006 - "POST /api/agent/run-test/ HTTP/1.1" 200 OK
-INFO:     127.0.0.1:34014 - "GET /api/dashboard/overview HTTP/1.1" 200 OK
-INFO:     127.0.0.1:40898 - "GET /api/dashboard/recent-tests?limit=5 HTTP/1.1" 500 Internal Server Error
-ERROR:    Exception in ASGI application
-Traceback (most recent call last):
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/uvicorn/protocols/http/h11_impl.py", line 403, in run_asgi
-    result = await app(  # type: ignore[func-returns-value]
-             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/uvicorn/middleware/proxy_headers.py", line 60, in __call__
-    return await self.app(scope, receive, send)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/fastapi/applications.py", line 1054, in __call__
-    await super().__call__(scope, receive, send)
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/starlette/applications.py", line 112, in __call__
-    await self.middleware_stack(scope, receive, send)
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/starlette/middleware/errors.py", line 187, in __call__
-    raise exc
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/starlette/middleware/errors.py", line 165, in __call__
-    await self.app(scope, receive, _send)
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/starlette/middleware/cors.py", line 85, in __call__
-    await self.app(scope, receive, send)
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/starlette/middleware/exceptions.py", line 62, in __call__
-    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
-    raise exc
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
-    await app(scope, receive, sender)
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/starlette/routing.py", line 714, in __call__
-    await self.middleware_stack(scope, receive, send)
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/starlette/routing.py", line 734, in app
-    await route.handle(scope, receive, send)
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/starlette/routing.py", line 288, in handle
-    await self.app(scope, receive, send)
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/starlette/routing.py", line 76, in app
-    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
-    raise exc
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
-    await app(scope, receive, sender)
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/starlette/routing.py", line 73, in app
-    response = await f(request)
-               ^^^^^^^^^^^^^^^^
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/fastapi/routing.py", line 302, in app
-    raw_response = await run_endpoint_function(
-                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/fastapi/routing.py", line 213, in run_endpoint_function
-    return await dependant.call(**values)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/workspace/project/app/routers/dashboard.py", line 156, in get_recent_tests
-    recent_tests = query.order_by(desc(TestResult.created_at)).limit(limit).all()
-                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/sqlalchemy/orm/query.py", line 2704, in all
-    return self._iter().all()  # type: ignore
-           ^^^^^^^^^^^^
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/sqlalchemy/orm/query.py", line 2857, in _iter
-    result: Union[ScalarResult[_T], Result[_T]] = self.session.execute(
-                                                  ^^^^^^^^^^^^^^^^^^^^^
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 2365, in execute
-    return self._execute_internal(
-           ^^^^^^^^^^^^^^^^^^^^^^^
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 2251, in _execute_internal
-    result: Result[Any] = compile_state_cls.orm_execute_statement(
-                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/sqlalchemy/orm/context.py", line 306, in orm_execute_statement
-    result = conn.execute(
-             ^^^^^^^^^^^^^
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1413, in execute
-    return meth(
-           ^^^^^
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/sqlalchemy/sql/elements.py", line 526, in _execute_on_connection
-    return connection._execute_clauseelement(
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1627, in _execute_clauseelement
-    compiled_sql, extracted_params, cache_hit = elem._compile_w_cache(
-                                                ^^^^^^^^^^^^^^^^^^^^^^
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/sqlalchemy/sql/elements.py", line 715, in _compile_w_cache
-    compiled_sql = self._compiler(
-                   ^^^^^^^^^^^^^^^
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/sqlalchemy/sql/elements.py", line 323, in _compiler
-    return dialect.statement_compiler(dialect, self, **kw)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/sqlalchemy/sql/compiler.py", line 1446, in __init__
-    Compiled.__init__(self, dialect, statement, **kwargs)
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/sqlalchemy/sql/compiler.py", line 886, in __init__
-    self.string = self.process(self.statement, **compile_kwargs)
-                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/sqlalchemy/sql/compiler.py", line 932, in process
-    return obj._compiler_dispatch(self, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/sqlalchemy/sql/visitors.py", line 138, in _compiler_dispatch
-    return meth(self, **kw)  # type: ignore  # noqa: E501
-           ^^^^^^^^^^^^^^^^
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/sqlalchemy/sql/compiler.py", line 4781, in visit_select
-    compile_state = select_stmt._compile_state_factory(
-                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/sqlalchemy/sql/base.py", line 701, in create_for_statement
-    return klass.create_for_statement(statement, compiler, **kw)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/sqlalchemy/orm/context.py", line 447, in create_for_statement
-    return cls._create_orm_context(
-           ^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/sqlalchemy/orm/context.py", line 1246, in _create_orm_context
-    self._setup_for_generate()
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/sqlalchemy/orm/context.py", line 1281, in _setup_for_generate
-    self._join(query._setup_joins, self._entities)
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/sqlalchemy/orm/context.py", line 1922, in _join
-    self._join_left_to_right(
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/sqlalchemy/orm/context.py", line 1957, in _join_left_to_right
-    ) = self._join_determine_implicit_left_side(
-        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/sqlalchemy/orm/context.py", line 2121, in _join_determine_implicit_left_side
-    raise sa_exc.InvalidRequestError(
-sqlalchemy.exc.InvalidRequestError: Don't know how to join to <Mapper at 0x77fdd6e93740; TestCase>. Please use the .select_from() method to establish an explicit left side, as well as providing an explicit ON clause if not present already to help resolve the ambiguity.
-INFO:     127.0.0.1:40914 - "GET /api/dashboard/recent-tests?limit=5 HTTP/1.1" 500 Internal Server Error
-ERROR:    Exception in ASGI application
-Traceback (most recent call last):
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/uvicorn/protocols/http/h11_impl.py", line 403, in run_asgi
-    result = await app(  # type: ignore[func-returns-value]
-             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/uvicorn/middleware/proxy_headers.py", line 60, in __call__
-    return await self.app(scope, receive, send)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/fastapi/applications.py", line 1054, in __call__
-    await super().__call__(scope, receive, send)
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/starlette/applications.py", line 112, in __call__
-    await self.middleware_stack(scope, receive, send)
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/starlette/middleware/errors.py", line 187, in __call__
-    raise exc
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/starlette/middleware/errors.py", line 165, in __call__
-    await self.app(scope, receive, _send)
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/starlette/middleware/cors.py", line 85, in __call__
-    await self.app(scope, receive, send)
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/starlette/middleware/exceptions.py", line 62, in __call__
-    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
-    raise exc
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
-    await app(scope, receive, sender)
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/starlette/routing.py", line 714, in __call__
-    await self.middleware_stack(scope, receive, send)
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/starlette/routing.py", line 734, in app
-    await route.handle(scope, receive, send)
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/starlette/routing.py", line 288, in handle
-    await self.app(scope, receive, send)
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/starlette/routing.py", line 76, in app
-    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
-    raise exc
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
-    await app(scope, receive, sender)
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/starlette/routing.py", line 73, in app
-    response = await f(request)
-               ^^^^^^^^^^^^^^^^
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/fastapi/routing.py", line 302, in app
-    raw_response = await run_endpoint_function(
-                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/fastapi/routing.py", line 213, in run_endpoint_function
-    return await dependant.call(**values)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/workspace/project/app/routers/dashboard.py", line 156, in get_recent_tests
-    recent_tests = query.order_by(desc(TestResult.created_at)).limit(limit).all()
-                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/sqlalchemy/orm/query.py", line 2704, in all
-    return self._iter().all()  # type: ignore
-           ^^^^^^^^^^^^
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/sqlalchemy/orm/query.py", line 2857, in _iter
-    result: Union[ScalarResult[_T], Result[_T]] = self.session.execute(
-                                                  ^^^^^^^^^^^^^^^^^^^^^
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 2365, in execute
-    return self._execute_internal(
-           ^^^^^^^^^^^^^^^^^^^^^^^
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 2251, in _execute_internal
-    result: Result[Any] = compile_state_cls.orm_execute_statement(
-                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/sqlalchemy/orm/context.py", line 306, in orm_execute_statement
-    result = conn.execute(
-             ^^^^^^^^^^^^^
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1413, in execute
-    return meth(
-           ^^^^^
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/sqlalchemy/sql/elements.py", line 526, in _execute_on_connection
-    return connection._execute_clauseelement(
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1627, in _execute_clauseelement
-    compiled_sql, extracted_params, cache_hit = elem._compile_w_cache(
-                                                ^^^^^^^^^^^^^^^^^^^^^^
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/sqlalchemy/sql/elements.py", line 715, in _compile_w_cache
-    compiled_sql = self._compiler(
-                   ^^^^^^^^^^^^^^^
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/sqlalchemy/sql/elements.py", line 323, in _compiler
-    return dialect.statement_compiler(dialect, self, **kw)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/sqlalchemy/sql/compiler.py", line 1446, in __init__
-    Compiled.__init__(self, dialect, statement, **kwargs)
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/sqlalchemy/sql/compiler.py", line 886, in __init__
-    self.string = self.process(self.statement, **compile_kwargs)
-                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/sqlalchemy/sql/compiler.py", line 932, in process
-    return obj._compiler_dispatch(self, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/sqlalchemy/sql/visitors.py", line 138, in _compiler_dispatch
-    return meth(self, **kw)  # type: ignore  # noqa: E501
-           ^^^^^^^^^^^^^^^^
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/sqlalchemy/sql/compiler.py", line 4781, in visit_select
-    compile_state = select_stmt._compile_state_factory(
-                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/sqlalchemy/sql/base.py", line 701, in create_for_statement
-    return klass.create_for_statement(statement, compiler, **kw)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/sqlalchemy/orm/context.py", line 447, in create_for_statement
-    return cls._create_orm_context(
-           ^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/sqlalchemy/orm/context.py", line 1246, in _create_orm_context
-    self._setup_for_generate()
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/sqlalchemy/orm/context.py", line 1281, in _setup_for_generate
-    self._join(query._setup_joins, self._entities)
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/sqlalchemy/orm/context.py", line 1922, in _join
-    self._join_left_to_right(
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/sqlalchemy/orm/context.py", line 1957, in _join_left_to_right
-    ) = self._join_determine_implicit_left_side(
-        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/openhands/poetry/openhands-ai-5O4_aCHf-py3.12/lib/python3.12/site-packages/sqlalchemy/orm/context.py", line 2121, in _join_determine_implicit_left_side
-    raise sa_exc.InvalidRequestError(
-sqlalchemy.exc.InvalidRequestError: Don't know how to join to <Mapper at 0x77fdd6e93740; TestCase>. Please use the .select_from() method to establish an explicit left side, as well as providing an explicit ON clause if not present already to help resolve the ambiguity.
-WARNING:  StatReload detected changes in 'app/routers/dashboard.py'. Reloading...
+WARNING:  StatReload detected changes in 'app/routers/dialogue.py'. Reloading...
 INFO:     Shutting down
 INFO:     Waiting for application shutdown.
 INFO:     Application shutdown complete.
-INFO:     Finished server process [4185]
-INFO:     Started server process [4672]
+INFO:     Finished server process [12636]
+INFO:     Started server process [12759]
 INFO:     Waiting for application startup.
 INFO:     Application startup complete.
-INFO:     127.0.0.1:49830 - "GET /api/dashboard/recent-tests?limit=5 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:43456 - "GET /api/dashboard/model-performance HTTP/1.1" 200 OK
-INFO:     10.2.0.140:45338 - "GET / HTTP/1.1" 200 OK
-INFO:     10.2.0.140:45338 - "GET /static/js/app.js HTTP/1.1" 200 OK
-INFO:     10.2.0.140:45342 - "GET /static/css/style.css HTTP/1.1" 200 OK
-INFO:     10.2.0.140:45342 - "GET /api/classification/test-cases/ HTTP/1.1" 200 OK
-INFO:     10.2.0.140:45338 - "GET /api/dashboard/overview HTTP/1.1" 200 OK
-INFO:     10.2.0.140:45338 - "GET /api/dashboard/model-performance HTTP/1.1" 200 OK
-INFO:     10.2.0.140:45338 - "GET /api/dashboard/recent-tests?limit=10 HTTP/1.1" 200 OK
-INFO:     10.2.0.140:45350 - "GET /api/classification/test-cases/ HTTP/1.1" 200 OK
-INFO:     10.2.0.140:44702 - "POST /api/classification/test-cases/ HTTP/1.1" 200 OK
-INFO:     10.2.0.140:44702 - "GET /api/classification/test-cases/ HTTP/1.1" 200 OK
-INFO:     10.2.0.140:33960 - "POST /api/classification/run-test/ HTTP/1.1" 200 OK
-INFO:     10.2.0.140:57682 - "GET /api/dashboard/overview HTTP/1.1" 200 OK
-INFO:     10.2.0.140:57682 - "GET /api/dashboard/model-performance HTTP/1.1" 200 OK
-INFO:     10.2.0.140:57682 - "GET /api/dashboard/recent-tests?limit=10 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:49448 - "GET /health HTTP/1.1" 200 OK
-INFO:     10.2.24.16:40914 - "GET / HTTP/1.1" 200 OK
-INFO:     10.2.17.140:49496 - "GET / HTTP/1.1" 200 OK
-INFO:     10.2.24.16:39826 - "GET / HTTP/1.1" 200 OK
-INFO:     10.2.24.16:39826 - "GET / HTTP/1.1" 200 OK
-INFO:     10.2.24.16:39826 - "GET / HTTP/1.1" 200 OK
-INFO:     10.2.24.16:57524 - "GET / HTTP/1.1" 200 OK
-INFO:     10.2.24.16:55832 - "GET / HTTP/1.1" 200 OK
-INFO:     10.2.24.16:35544 - "GET / HTTP/1.1" 200 OK
+WARNING:  StatReload detected changes in 'app/routers/dialogue.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [12759]
+INFO:     Started server process [12886]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     127.0.0.1:38174 - "POST /api/correction/test-cases/12/run HTTP/1.1" 500 Internal Server Error
+WARNING:  StatReload detected changes in 'app/routers/correction.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [12886]
+INFO:     Started server process [13133]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     127.0.0.1:38196 - "POST /api/correction/test-cases/12/run HTTP/1.1" 200 OK

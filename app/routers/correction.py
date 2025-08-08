@@ -43,11 +43,35 @@ async def get_correction_test_cases(
     ).offset(skip).limit(limit).all()
     return test_cases
 
-@router.post("/run-test/")
+@router.post("/test-cases/{test_case_id}/run")
 async def run_correction_test(
+    test_case_id: int,
+    request_data: dict,
+    db: Session = Depends(get_db)
+):
+    """运行纠错任务测试"""
+    model_name = request_data.get("model_name")
+    correction_mode = request_data.get("correction_mode", "balanced")
+    
+    if not model_name:
+        raise HTTPException(status_code=400, detail="缺少model_name参数")
+        
+    return await _run_correction_test_internal(test_case_id, model_name, correction_mode, db)
+
+@router.post("/run-test/")
+async def run_correction_test_form(
     test_case_id: int = Form(...),
     model_name: str = Form(...),
     db: Session = Depends(get_db)
+):
+    """运行纠错任务测试（表单方式）"""
+    return await _run_correction_test_internal(test_case_id, model_name, "balanced", db)
+
+async def _run_correction_test_internal(
+    test_case_id: int,
+    model_name: str,
+    correction_mode: str,
+    db: Session
 ):
     """运行纠错任务测试"""
     test_case = db.query(TestCase).filter(TestCase.id == test_case_id).first()
@@ -61,7 +85,12 @@ async def run_correction_test(
         start_time = time.time()
         
         correction_service = CorrectionService()
-        input_data = CorrectionInput(**test_case.input_data)
+        
+        # 适配我们的数据结构
+        input_data = CorrectionInput(
+            text=test_case.input_data.get("original_text"),
+            correction_type=test_case.input_data.get("error_type", "grammar")
+        )
         
         result = await correction_service.correct(
             text=input_data.text,
@@ -71,7 +100,12 @@ async def run_correction_test(
         
         execution_time = time.time() - start_time
         
-        expected_output = CorrectionOutput(**test_case.expected_output)
+        # 适配expected_output结构
+        expected_output = CorrectionOutput(
+            corrected_text=test_case.expected_output.get("corrected_text", ""),
+            corrections=[],  # 这里可以根据需要填充
+            confidence=test_case.expected_output.get("min_similarity", 0.8)
+        )
         metrics = correction_service.evaluate(result, expected_output)
         
         test_result = TestResult(

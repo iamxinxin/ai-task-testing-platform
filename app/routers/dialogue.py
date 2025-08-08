@@ -43,11 +43,37 @@ async def get_dialogue_test_cases(
     ).offset(skip).limit(limit).all()
     return test_cases
 
-@router.post("/run-test/")
+@router.post("/test-cases/{test_case_id}/run")
 async def run_dialogue_test(
+    test_case_id: int,
+    request_data: dict,
+    db: Session = Depends(get_db)
+):
+    """运行对话任务测试"""
+    model_name = request_data.get("model_name")
+    temperature = request_data.get("temperature", 0.7)
+    max_tokens = request_data.get("max_tokens", 150)
+    
+    if not model_name:
+        raise HTTPException(status_code=400, detail="缺少model_name参数")
+        
+    return await _run_dialogue_test_internal(test_case_id, model_name, temperature, max_tokens, db)
+
+@router.post("/run-test/")
+async def run_dialogue_test_form(
     test_case_id: int,
     model_name: str,
     db: Session = Depends(get_db)
+):
+    """运行对话任务测试（表单方式）"""
+    return await _run_dialogue_test_internal(test_case_id, model_name, 0.7, 150, db)
+
+async def _run_dialogue_test_internal(
+    test_case_id: int,
+    model_name: str,
+    temperature: float,
+    max_tokens: int,
+    db: Session
 ):
     """运行对话任务测试"""
     test_case = db.query(TestCase).filter(TestCase.id == test_case_id).first()
@@ -61,7 +87,13 @@ async def run_dialogue_test(
         start_time = time.time()
         
         dialogue_service = DialogueService()
-        input_data = DialogueInput(**test_case.input_data)
+        
+        # 适配我们的数据结构
+        input_data = DialogueInput(
+            message=test_case.input_data.get("user_input"),
+            context=test_case.input_data.get("conversation_history"),
+            user_id=test_case.input_data.get("user_id")
+        )
         
         result = await dialogue_service.generate_response(
             message=input_data.message,

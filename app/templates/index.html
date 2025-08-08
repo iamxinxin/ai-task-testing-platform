@@ -274,25 +274,426 @@
                     </div>
                 </div>
 
-                <!-- 其他任务类型的界面类似，这里省略以节省空间 -->
+                <!-- 纠错任务 -->
                 <div id="correction-section" class="content-section" style="display: none;">
                     <h2><i class="fas fa-spell-check me-2"></i>纠错任务测试</h2>
-                    <p>纠错任务测试界面开发中...</p>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>创建纠错测试用例</h5>
+                                </div>
+                                <div class="card-body">
+                                    <form id="correction-form">
+                                        <div class="mb-3">
+                                            <label class="form-label">测试用例名称</label>
+                                            <input type="text" class="form-control" name="name" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">描述</label>
+                                            <textarea class="form-control" name="description" rows="2"></textarea>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">原始文本（包含错误）</label>
+                                            <textarea class="form-control" name="original_text" rows="4" required placeholder="输入包含语法、拼写或逻辑错误的文本..."></textarea>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">期望纠正后的文本</label>
+                                            <textarea class="form-control" name="expected_corrected" rows="4" required placeholder="输入期望的纠正结果..."></textarea>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">错误类型</label>
+                                            <select class="form-select" name="error_type">
+                                                <option value="grammar">语法错误</option>
+                                                <option value="spelling">拼写错误</option>
+                                                <option value="punctuation">标点符号</option>
+                                                <option value="logic">逻辑错误</option>
+                                                <option value="mixed">混合错误</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">最小相似度阈值</label>
+                                            <input type="number" class="form-control" name="min_similarity" min="0" max="1" step="0.01" value="0.8">
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">创建测试用例</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>运行纠错测试</h5>
+                                </div>
+                                <div class="card-body">
+                                    <form id="run-correction-test">
+                                        <div class="mb-3">
+                                            <label class="form-label">选择测试用例</label>
+                                            <select class="form-select" name="test_case_id" required>
+                                                <option value="">请选择测试用例</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">选择模型</label>
+                                            <select class="form-select" name="model_name" required>
+                                                <option value="mock-corrector">Mock纠错器</option>
+                                                <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
+                                                <option value="gpt-4">GPT-4</option>
+                                                <option value="claude-3-sonnet">Claude-3 Sonnet</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">纠错模式</label>
+                                            <select class="form-select" name="correction_mode">
+                                                <option value="conservative">保守模式（只纠正明显错误）</option>
+                                                <option value="aggressive">激进模式（全面纠错）</option>
+                                                <option value="balanced">平衡模式（适度纠错）</option>
+                                            </select>
+                                        </div>
+                                        <button type="submit" class="btn btn-success">运行测试</button>
+                                    </form>
+                                    
+                                    <div id="correction-result" class="mt-3" style="display: none;">
+                                        <h6>测试结果：</h6>
+                                        <div class="alert alert-info">
+                                            <pre id="correction-result-content"></pre>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
+                <!-- 对话任务 -->
                 <div id="dialogue-section" class="content-section" style="display: none;">
                     <h2><i class="fas fa-comments me-2"></i>对话任务测试</h2>
-                    <p>对话任务测试界面开发中...</p>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>创建对话测试用例</h5>
+                                </div>
+                                <div class="card-body">
+                                    <form id="dialogue-form">
+                                        <div class="mb-3">
+                                            <label class="form-label">测试用例名称</label>
+                                            <input type="text" class="form-control" name="name" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">描述</label>
+                                            <textarea class="form-control" name="description" rows="2"></textarea>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">对话历史（JSON格式）</label>
+                                            <textarea class="form-control" name="conversation_history" rows="6" required placeholder='[{"role": "user", "content": "你好"}, {"role": "assistant", "content": "您好！有什么可以帮助您的吗？"}]'></textarea>
+                                            <small class="form-text text-muted">请输入JSON格式的对话历史，包含role和content字段</small>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">用户输入</label>
+                                            <textarea class="form-control" name="user_input" rows="2" required placeholder="用户的新消息..."></textarea>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">期望回复关键词</label>
+                                            <input type="text" class="form-control" name="expected_keywords" placeholder="用逗号分隔的关键词">
+                                            <small class="form-text text-muted">AI回复中应包含的关键词</small>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">对话类型</label>
+                                            <select class="form-select" name="dialogue_type">
+                                                <option value="casual">日常对话</option>
+                                                <option value="customer_service">客服对话</option>
+                                                <option value="technical">技术支持</option>
+                                                <option value="educational">教育辅导</option>
+                                                <option value="creative">创意写作</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">最小回复长度</label>
+                                            <input type="number" class="form-control" name="min_response_length" value="10">
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">创建测试用例</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>运行对话测试</h5>
+                                </div>
+                                <div class="card-body">
+                                    <form id="run-dialogue-test">
+                                        <div class="mb-3">
+                                            <label class="form-label">选择测试用例</label>
+                                            <select class="form-select" name="test_case_id" required>
+                                                <option value="">请选择测试用例</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">选择模型</label>
+                                            <select class="form-select" name="model_name" required>
+                                                <option value="mock-chatbot">Mock聊天机器人</option>
+                                                <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
+                                                <option value="gpt-4">GPT-4</option>
+                                                <option value="claude-3-sonnet">Claude-3 Sonnet</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">温度参数</label>
+                                            <input type="number" class="form-control" name="temperature" min="0" max="2" step="0.1" value="0.7">
+                                            <small class="form-text text-muted">控制回复的创造性，0-2之间</small>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">最大回复长度</label>
+                                            <input type="number" class="form-control" name="max_tokens" value="150">
+                                        </div>
+                                        <button type="submit" class="btn btn-success">运行测试</button>
+                                    </form>
+                                    
+                                    <div id="dialogue-result" class="mt-3" style="display: none;">
+                                        <h6>测试结果：</h6>
+                                        <div class="alert alert-info">
+                                            <pre id="dialogue-result-content"></pre>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
+                <!-- RAG任务 -->
                 <div id="rag-section" class="content-section" style="display: none;">
                     <h2><i class="fas fa-search me-2"></i>RAG任务测试</h2>
-                    <p>RAG任务测试界面开发中...</p>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>创建RAG测试用例</h5>
+                                </div>
+                                <div class="card-body">
+                                    <form id="rag-form">
+                                        <div class="mb-3">
+                                            <label class="form-label">测试用例名称</label>
+                                            <input type="text" class="form-control" name="name" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">描述</label>
+                                            <textarea class="form-control" name="description" rows="2"></textarea>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">知识库文档（每行一个文档）</label>
+                                            <textarea class="form-control" name="knowledge_base" rows="6" required placeholder="文档1：关于产品A的详细介绍...&#10;文档2：产品A的技术规格...&#10;文档3：产品A的使用说明..."></textarea>
+                                            <small class="form-text text-muted">每行代表一个文档，将用于构建知识库</small>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">用户查询</label>
+                                            <textarea class="form-control" name="query" rows="2" required placeholder="用户想要查询的问题..."></textarea>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">期望答案关键词</label>
+                                            <input type="text" class="form-control" name="expected_keywords" placeholder="用逗号分隔的关键词">
+                                            <small class="form-text text-muted">答案中应包含的关键词</small>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">检索文档数量</label>
+                                            <input type="number" class="form-control" name="top_k" value="3" min="1" max="10">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">最小相关性阈值</label>
+                                            <input type="number" class="form-control" name="min_relevance" min="0" max="1" step="0.01" value="0.7">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">RAG类型</label>
+                                            <select class="form-select" name="rag_type">
+                                                <option value="simple">简单RAG</option>
+                                                <option value="conversational">对话式RAG</option>
+                                                <option value="multi_query">多查询RAG</option>
+                                                <option value="hierarchical">层次化RAG</option>
+                                            </select>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">创建测试用例</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>运行RAG测试</h5>
+                                </div>
+                                <div class="card-body">
+                                    <form id="run-rag-test">
+                                        <div class="mb-3">
+                                            <label class="form-label">选择测试用例</label>
+                                            <select class="form-select" name="test_case_id" required>
+                                                <option value="">请选择测试用例</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">选择模型</label>
+                                            <select class="form-select" name="model_name" required>
+                                                <option value="mock-rag">Mock RAG系统</option>
+                                                <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
+                                                <option value="gpt-4">GPT-4</option>
+                                                <option value="claude-3-sonnet">Claude-3 Sonnet</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">嵌入模型</label>
+                                            <select class="form-select" name="embedding_model">
+                                                <option value="text-embedding-ada-002">OpenAI Ada-002</option>
+                                                <option value="sentence-transformers">Sentence Transformers</option>
+                                                <option value="mock-embedding">Mock嵌入模型</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">检索策略</label>
+                                            <select class="form-select" name="retrieval_strategy">
+                                                <option value="similarity">相似度检索</option>
+                                                <option value="mmr">最大边际相关性</option>
+                                                <option value="diversity">多样性检索</option>
+                                            </select>
+                                        </div>
+                                        <button type="submit" class="btn btn-success">运行测试</button>
+                                    </form>
+                                    
+                                    <div id="rag-result" class="mt-3" style="display: none;">
+                                        <h6>测试结果：</h6>
+                                        <div class="alert alert-info">
+                                            <pre id="rag-result-content"></pre>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
+                <!-- Agent任务 -->
                 <div id="agent-section" class="content-section" style="display: none;">
                     <h2><i class="fas fa-cogs me-2"></i>Agent任务测试</h2>
-                    <p>Agent任务测试界面开发中...</p>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>创建Agent测试用例</h5>
+                                </div>
+                                <div class="card-body">
+                                    <form id="agent-form">
+                                        <div class="mb-3">
+                                            <label class="form-label">测试用例名称</label>
+                                            <input type="text" class="form-control" name="name" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">描述</label>
+                                            <textarea class="form-control" name="description" rows="2"></textarea>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">任务目标</label>
+                                            <textarea class="form-control" name="task_goal" rows="3" required placeholder="描述Agent需要完成的具体任务目标..."></textarea>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">可用工具（JSON格式）</label>
+                                            <textarea class="form-control" name="available_tools" rows="6" required placeholder='[{"name": "search", "description": "搜索信息", "parameters": {"query": "string"}}, {"name": "calculator", "description": "计算器", "parameters": {"expression": "string"}}]'></textarea>
+                                            <small class="form-text text-muted">定义Agent可以使用的工具列表</small>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">初始环境状态</label>
+                                            <textarea class="form-control" name="initial_state" rows="3" placeholder="描述初始环境状态和可用资源..."></textarea>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">期望结果</label>
+                                            <textarea class="form-control" name="expected_result" rows="3" required placeholder="描述期望的任务完成结果..."></textarea>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">成功标准</label>
+                                            <input type="text" class="form-control" name="success_criteria" placeholder="用逗号分隔的成功标准">
+                                            <small class="form-text text-muted">评估任务是否成功完成的标准</small>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">最大步骤数</label>
+                                            <input type="number" class="form-control" name="max_steps" value="10" min="1" max="50">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Agent类型</label>
+                                            <select class="form-select" name="agent_type">
+                                                <option value="reasoning">推理型Agent</option>
+                                                <option value="planning">规划型Agent</option>
+                                                <option value="reactive">反应型Agent</option>
+                                                <option value="multi_agent">多Agent协作</option>
+                                            </select>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">创建测试用例</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>运行Agent测试</h5>
+                                </div>
+                                <div class="card-body">
+                                    <form id="run-agent-test">
+                                        <div class="mb-3">
+                                            <label class="form-label">选择测试用例</label>
+                                            <select class="form-select" name="test_case_id" required>
+                                                <option value="">请选择测试用例</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">选择模型</label>
+                                            <select class="form-select" name="model_name" required>
+                                                <option value="mock-agent">Mock Agent</option>
+                                                <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
+                                                <option value="gpt-4">GPT-4</option>
+                                                <option value="claude-3-sonnet">Claude-3 Sonnet</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">执行模式</label>
+                                            <select class="form-select" name="execution_mode">
+                                                <option value="step_by_step">逐步执行</option>
+                                                <option value="autonomous">自主执行</option>
+                                                <option value="interactive">交互式执行</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">超时时间（秒）</label>
+                                            <input type="number" class="form-control" name="timeout" value="300" min="30" max="3600">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">详细日志</label>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="verbose_logging" checked>
+                                                <label class="form-check-label">
+                                                    记录详细的执行步骤和推理过程
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <button type="submit" class="btn btn-success">运行测试</button>
+                                    </form>
+                                    
+                                    <div id="agent-result" class="mt-3" style="display: none;">
+                                        <h6>测试结果：</h6>
+                                        <div class="alert alert-info">
+                                            <pre id="agent-result-content"></pre>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
