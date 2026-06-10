@@ -7,7 +7,7 @@ from fastapi import Request
 import os
 from dotenv import load_dotenv
 
-from app.routers import classification, correction, dialogue, rag, agent, dashboard
+from app.routers import classification, correction, dialogue, rag, agent, dashboard, buffer
 from app.database import engine, Base
 from app.models import test_models
 
@@ -43,11 +43,17 @@ app.include_router(dialogue.router, prefix="/api/dialogue", tags=["对话任务"
 app.include_router(rag.router, prefix="/api/rag", tags=["RAG任务"])
 app.include_router(agent.router, prefix="/api/agent", tags=["Agent任务"])
 app.include_router(dashboard.router, prefix="/api/dashboard", tags=["仪表板"])
+app.include_router(buffer.router, prefix="/api/buffer", tags=["缓冲带MVP"])
 
 @app.get("/", response_class=HTMLResponse)
 async def root(request: Request):
     """主页"""
-    return templates.TemplateResponse("index.html", {"request": request})
+    return templates.TemplateResponse(request=request, name="index.html", context={})
+
+@app.get("/buffer", response_class=HTMLResponse)
+async def buffer_app(request: Request):
+    """缓冲带MVP页面"""
+    return templates.TemplateResponse(request=request, name="buffer.html", context={})
 
 @app.get("/health")
 async def health_check():
