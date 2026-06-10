@@ -56,3 +56,32 @@ class Model(Base):
     is_active = Column(Boolean, default=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+
+
+class WeeklyPrep(Base):
+    """缓冲带每周通话准备记录"""
+    __tablename__ = "weekly_prep"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_key = Column(String(255), nullable=False, default="demo-user")
+    week_id = Column(String(20), nullable=False, index=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    dread_before = Column(Integer, nullable=False, default=5)
+    predicted_pushes = Column(JSON)
+    selected_shields = Column(JSON)
+    real_share = Column(JSON)
+
+
+class CallLog(Base):
+    """缓冲带通话复盘；情绪倾倒箱内容仅保存在浏览器本地，不入库"""
+    __tablename__ = "call_logs"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_key = Column(String(255), nullable=False, default="demo-user")
+    week_id = Column(String(20), nullable=False, index=True)
+    call_date = Column(DateTime(timezone=True), server_default=func.now())
+    dread_after = Column(Integer, nullable=False)
+    push_count = Column(Integer, nullable=False, default=0)
+    shield_used = Column(Boolean, default=False)
+    shield_effective = Column(Boolean, default=False)
+    notes = Column(Text)
